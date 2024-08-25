@@ -3,7 +3,7 @@
 import { z } from "zod"
 import fs from "fs/promises"
 import prisma from "@/db/db"
-import { redirect } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 
 const fileSchema = z.instanceof(File, {message:"Required"})
 const imageScheme = fileSchema.refine(
@@ -44,5 +44,22 @@ export async function addProduct(prevState: unknown, formData: FormData){
         imagePath
     }})
     redirect("/admin/products")
+}
 
+export async function toggleProductAvailability(
+    id: string, isAvailablePurchase: boolean
+){
+    await prisma.product.update({
+        where:{id}, data:{isAvailablePurchase}
+    })
+}
+
+export async function deleteProduct(id: string){
+    const product = await prisma.product.delete({where :{id}})
+    if (product == null) {
+        return notFound()
+    }
+
+    await fs.unlink(product.filePath)
+    await fs.unlink(`public/${product.imagePath}`)
 }
