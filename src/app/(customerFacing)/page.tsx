@@ -8,21 +8,53 @@ import {
   ProductCardSkeleton,
 } from "../admin/_components/ProductCard";
 import { Suspense } from "react";
+import { cache } from "@/lib/cache";
 
-function getNewestProduct() {
-  return prisma.product.findMany({
-    where: { isAvailablePurchase: true },
-    orderBy: { order: { _count: "desc" } },
-    take: 6,
-  });
-}
-function getMostPopularProducts() {
-  return prisma.product.findMany({
-    where: { isAvailablePurchase: true },
-    orderBy: { createdAt: "desc" },
-    take: 6,
-  });
-}
+// function getNewestProduct() {
+//   return prisma.product.findMany({
+//     where: { isAvailablePurchase: true },
+//     orderBy: { order: { _count: "desc" } },
+//     take: 6,
+//   });
+// }
+
+const getNewestProduct = cache(
+  () => {
+    return prisma.product.findMany({
+      where: { isAvailablePurchase: true },
+      orderBy: { order: { _count: "desc" } },
+      take: 6,
+    });
+  },
+  ["/", "getNewestProduct"],
+  { revalidate: 60 * 60 * 24 }
+);
+
+const getMostPopularProducts = cache(
+  () => {
+    // await wait(2000);
+    return prisma.product.findMany({
+      where: { isAvailablePurchase: true },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+    });
+  },
+  ["/", "getMostPopularProducts"],
+  { revalidate: 60 * 60 * 24 }
+);
+// function getMostPopularProducts() {
+//   // await wait(2000);
+//   return prisma.product.findMany({
+//     where: { isAvailablePurchase: true },
+//     orderBy: { createdAt: "desc" },
+//     take: 6,
+//   });
+// }
+
+// slow down the browser
+// async function wait(duration: number) {
+//   return new Promise((resolve) => setTimeout(resolve, duration));
+// }
 
 export default function HomePage() {
   return (
