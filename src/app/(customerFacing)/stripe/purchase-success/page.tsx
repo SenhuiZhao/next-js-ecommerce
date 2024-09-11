@@ -11,10 +11,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 export default async function SuccessPage({
   searchParams,
 }: {
-  searchParams: { payment_Intent: string };
+  searchParams: { payment_intent: string };
 }) {
   const paymentIntent = await stripe.paymentIntents.retrieve(
-    searchParams.payment_Intent
+    searchParams.payment_intent
   );
 
   if (paymentIntent.metadata.productId == null) return notFound();
@@ -71,5 +71,5 @@ async function createDownloadVerification(productId: string) {
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
       },
     })
-  ).id;
+  ).id
 }

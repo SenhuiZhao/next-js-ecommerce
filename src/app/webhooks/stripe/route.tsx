@@ -1,9 +1,10 @@
-import prisma from "@/db/db";
 import { NextRequest, NextResponse } from "next/server";
-
 import Stripe from "stripe";
+import { Resend } from "resend";
+import prisma from "@/db/db";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+const resend = new Resend(process.env.RESEND_API_KEY as string);
 
 export async function POST(req: NextRequest) {
   const event = await stripe.webhooks.constructEvent(
@@ -21,22 +22,20 @@ export async function POST(req: NextRequest) {
     const product = await prisma.product.findUnique({
       where: { id: productId },
     });
-
     if (product == null || email == null) {
       return new NextResponse("Bad Request", { status: 400 });
     }
 
-    const userInfo = {
+    const userFields = {
       email,
-      order: { create: { productId, pricePaidInCents } },
+      orders: { create: { productId, pricePaidInCents } },
     };
-
     const {
       order: [order],
     } = await prisma.user.upsert({
       where: { email },
-      create: userInfo,
-      update: userInfo,
+      create: userFields,
+      update: userFields,
       select: { order: { orderBy: { createdAt: "desc" }, take: 1 } },
     });
 
@@ -46,5 +45,23 @@ export async function POST(req: NextRequest) {
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
       },
     });
+
+    await resend.emails.send({
+      from: `Support <${process.env.SENDER_EMAIL}>`,
+      to: email,
+      subject: "Order Confirmation",
+      react: (
+        // (
+        // <PurchaseReceiptEmail
+        //   order={order}
+        //   product={product}
+        //   downloadVerificationId={downloadVerification.id}
+        // />
+        // ),
+        <h1>hi</h1>
+      ),
+    });
   }
+
+  return new NextResponse();
 }
