@@ -71,5 +71,5 @@ async function createDownloadVerification(productId: string) {
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
       },
     })
-  ).id
+  ).id;
 }

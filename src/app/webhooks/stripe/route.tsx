@@ -31,12 +31,12 @@ export async function POST(req: NextRequest) {
       orders: { create: { productId, pricePaidInCents } },
     };
     const {
-      order: [order],
+      orders: [order],
     } = await prisma.user.upsert({
       where: { email },
       create: userFields,
       update: userFields,
-      select: { order: { orderBy: { createdAt: "desc" }, take: 1 } },
+      select: { orders: { orderBy: { createdAt: "desc" }, take: 1 } },
     });
 
     const downloadVerification = await prisma.downloadVerification.create({
@@ -51,14 +51,12 @@ export async function POST(req: NextRequest) {
       to: email,
       subject: "Order Confirmation",
       react: (
-        // (
         // <PurchaseReceiptEmail
         //   order={order}
         //   product={product}
         //   downloadVerificationId={downloadVerification.id}
         // />
-        // ),
-        <h1>hi</h1>
+        <h1>Hi</h1>
       ),
     });
   }

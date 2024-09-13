@@ -1,6 +1,6 @@
-import prisma from "@/db/db";
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
+import prisma from "@/db/db";
 
 export async function GET(
   req: NextRequest,
@@ -14,7 +14,9 @@ export async function GET(
   });
 
   if (data == null) {
-    return NextResponse.redirect(new URL("/products/download/expired", req.url))
+    return NextResponse.redirect(
+      new URL("/products/download/expired", req.url)
+    );
   }
 
   const { size } = await fs.stat(data.product.filePath);
@@ -26,6 +28,8 @@ export async function GET(
       "content-length": size.toString(),
     },
   });
-
-  return new NextResponse("Hi");
 }
+
+// export function GET() {
+//   return new NextResponse(" Hi here ");
+// }
