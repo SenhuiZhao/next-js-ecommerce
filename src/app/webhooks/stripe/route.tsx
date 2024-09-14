@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { Resend } from "resend";
 import prisma from "@/db/db";
+import { Resend } from "resend";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const resend = new Resend(process.env.RESEND_API_KEY as string);
 
 export async function POST(req: NextRequest) {
+  // console.log("11111--------------1111");
   const event = await stripe.webhooks.constructEvent(
     await req.text(),
     req.headers.get("stripe-signature") as string,
@@ -22,21 +23,26 @@ export async function POST(req: NextRequest) {
     const product = await prisma.product.findUnique({
       where: { id: productId },
     });
+
+    console.log(`email ${email}`);
+    console.log(`productId ${productId}`);
+
     if (product == null || email == null) {
       return new NextResponse("Bad Request", { status: 400 });
     }
 
     const userFields = {
       email,
-      orders: { create: { productId, pricePaidInCents } },
+      order: { create: { productId, pricePaidInCents } }, // Updated to 'order'
     };
+
     const {
-      orders: [order],
+      order: [order],
     } = await prisma.user.upsert({
       where: { email },
       create: userFields,
       update: userFields,
-      select: { orders: { orderBy: { createdAt: "desc" }, take: 1 } },
+      select: { order: { orderBy: { createdAt: "desc" }, take: 1 } },
     });
 
     const downloadVerification = await prisma.downloadVerification.create({
@@ -51,12 +57,12 @@ export async function POST(req: NextRequest) {
       to: email,
       subject: "Order Confirmation",
       react: (
-        // <PurchaseReceiptEmail
-        //   order={order}
-        //   product={product}
-        //   downloadVerificationId={downloadVerification.id}
-        // />
-        <h1>Hi</h1>
+        <PurchaseReceiptEmail
+          order={order}
+          product={product}
+          downloadVerificationId={downloadVerification.id}
+        />
+        // <h1>Hi</h1>
       ),
     });
   }
