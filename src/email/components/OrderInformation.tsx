@@ -10,7 +10,7 @@ import {
 
 type OrderInformationProps = {
   order: { id: string; createdAt: Date; pricePaidInCents: number };
-  product: { imagePath: string; name: string; description: string };
+  product: { imagePath: string; name: string; Description: string };
   downloadVerificationId: string;
 };
 
@@ -70,7 +70,7 @@ export function OrderInformation({
         </Row>
         <Row>
           <Column>
-            <Text className="text-gray-500 mb-0">{product.description}</Text>
+            <Text className="text-gray-500 mb-0">{product.Description}</Text>
           </Column>
         </Row>
       </Section>

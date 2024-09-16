@@ -20,7 +20,7 @@ type OrderHistoryEmailProps = {
     product: {
       name: string;
       imagePath: string;
-      description: string;
+      Description: string;
     };
   }[];
 };
@@ -34,9 +34,9 @@ OrderHistoryEmail.PreviewProps = {
       downloadVerificationId: crypto.randomUUID(),
       product: {
         name: "Product name",
-        description: "Some description",
+        Description: "Some Description",
         imagePath:
-          "/products/5aba7442-e4a5-4d2e-bfa7-5bd358cdad64-02 - What Is Next.js.jpg",
+          "public/products/c3c1375e-ae0b-4445-9eb2-407b1a05a95f-Test.jpg",
       },
     },
     {
@@ -46,9 +46,9 @@ OrderHistoryEmail.PreviewProps = {
       downloadVerificationId: crypto.randomUUID(),
       product: {
         name: "Product name 2",
-        description: "Some other desc",
+        Description: "Some other desc",
         imagePath:
-          "/products/db3035a5-e762-41b0-996f-d54ec730bc9c-01 - Course Introduction.jpg",
+          "public/products/83e2e821-679d-4dba-8ea9-e26ecfd00d7c-Test2.jpg",
       },
     },
   ],
