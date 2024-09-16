@@ -53,7 +53,7 @@ export function OrderInformation({
         <Img
           width="100%"
           alt={product.name}
-          src={`${process.env.NEXT_PUBLIC_SERVER_URL}${product.imagePath}`}
+          src={`http://localhost:3000${product.imagePath}`}
         />
         <Row className="mt-8">
           <Column className="align-bottom">

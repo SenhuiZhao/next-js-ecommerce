@@ -35,8 +35,7 @@ OrderHistoryEmail.PreviewProps = {
       product: {
         name: "Product name",
         Description: "Some Description",
-        imagePath:
-          "public/products/c3c1375e-ae0b-4445-9eb2-407b1a05a95f-Test.jpg",
+        imagePath: "/products/c3c1375e-ae0b-4445-9eb2-407b1a05a95f-Test.jpg",
       },
     },
     {
@@ -47,8 +46,7 @@ OrderHistoryEmail.PreviewProps = {
       product: {
         name: "Product name 2",
         Description: "Some other desc",
-        imagePath:
-          "public/products/83e2e821-679d-4dba-8ea9-e26ecfd00d7c-Test2.jpg",
+        imagePath: "/products/83e2e821-679d-4dba-8ea9-e26ecfd00d7c-Test2.jpg",
       },
     },
   ],
